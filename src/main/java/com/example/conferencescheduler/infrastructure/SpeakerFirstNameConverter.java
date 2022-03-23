@@ -1,7 +1,5 @@
 package com.example.conferencescheduler.infrastructure;
 
-import com.example.conferencescheduler.domain.Speaker;
-import com.example.conferencescheduler.domain.valueobjects.SessionName;
 import com.example.conferencescheduler.domain.valueobjects.SpeakerFirstName;
 
 import javax.persistence.AttributeConverter;

@@ -7,10 +7,18 @@ import com.example.conferencescheduler.domain.valueobjects.SessionName;
 import com.example.conferencescheduler.dtos.GetSessionDto;
 import com.example.conferencescheduler.dtos.PostSessionDto;
 import com.example.conferencescheduler.repositories.SessionRepository;
+import io.vavr.API;
+import io.vavr.control.Option;
 import org.springframework.beans.BeanUtils;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static io.vavr.API.*;
+import static io.vavr.Patterns.$None;
+import static io.vavr.Patterns.$Some;
 
 @RestController
 @RequestMapping("/api/v1/sessions")
@@ -33,10 +41,12 @@ public class SessionsController {
 
     @GetMapping
     @RequestMapping("{id}")
-    public GetSessionDto get(@PathVariable Long id){
+    public ResponseEntity<GetSessionDto> get(@PathVariable Long id){
 
-        var session = sessionRepository.getById(id);
-        return GetSessionDto.fromSession(session);
+        var input = sessionRepository.findByIdOption(id);
+        return Match(input).of(
+                Case($Some($()), x -> new ResponseEntity<>(GetSessionDto.fromSession(x), HttpStatus.OK)),
+                Case($None(), () -> new ResponseEntity<>(HttpStatus.NOT_FOUND)));
     }
 
     @PostMapping
@@ -52,9 +62,12 @@ public class SessionsController {
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
-    public void delete(@PathVariable Long id) {
+    public ResponseEntity<HttpStatus> delete(@PathVariable Long id) {
         //Also need to check for child records before deleting
-        sessionRepository.deleteById(id);
+        var input = sessionRepository.deleteByIdOption(id);
+        return Match(input).of(
+                Case($(0),new ResponseEntity<>(HttpStatus.BAD_REQUEST)),
+                Case($(1), new ResponseEntity<>(HttpStatus.NO_CONTENT)));
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.PUT)
