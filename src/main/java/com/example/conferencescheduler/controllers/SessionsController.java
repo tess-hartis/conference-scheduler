@@ -63,7 +63,7 @@ public class SessionsController {
 
     @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
     public ResponseEntity<HttpStatus> delete(@PathVariable Long id) {
-        //Also need to check for child records before deleting
+
         var input = sessionRepository.deleteByIdOption(id);
         return Match(input).of(
                 Case($(0),new ResponseEntity<>(HttpStatus.BAD_REQUEST)),
