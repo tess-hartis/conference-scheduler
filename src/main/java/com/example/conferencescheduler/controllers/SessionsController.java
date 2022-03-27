@@ -40,7 +40,7 @@ public class SessionsController {
 
     @GetMapping
     @RequestMapping("{id}")
-    public ResponseEntity<GetSessionDto> get(@PathVariable Long id){
+    public ResponseEntity<GetSessionDto> get(@PathVariable Long id) {
 
         var input = sessionRepository.findByIdOption(id);
         return Match(input).of(
@@ -49,14 +49,23 @@ public class SessionsController {
     }
 
     @PostMapping
-    public void create(@RequestBody PostSessionDto dto){
+    public ResponseEntity create(@RequestBody PostSessionDto dto) {
 
-        var name = SessionName.of(dto.session_name);
-        var description = SessionDescription.of(dto.session_description);
-        var length = SessionLength.of(dto.session_length);
+        var name = SessionName.validate(dto.session_name);
+        var description = SessionDescription.validate(dto.session_description);
+        var length = SessionLength.validate(dto.session_length);
 
-        var session = Session.of(name, description, length);
-        sessionRepository.saveAndFlush(session);
+        return Validation.combine(name, description, length)
+                .ap(Session::of)
+                .fold(e -> unprocessableEntity().body(e.toJavaList()),
+                      c -> ok(sessionRepository.saveAndFlush(c)));
+
+//                .map(sessionRepository::saveAndFlush)
+//                .mapError(Value::toJavaList);
+
+//        return Match(result).of(
+//                Case($Valid($()),() -> new ResponseEntity<>(HttpStatus.CREATED)),
+//                Case($Invalid($()), e -> new ResponseEntity<>(e, HttpStatus.BAD_REQUEST)));
 
     }
 
