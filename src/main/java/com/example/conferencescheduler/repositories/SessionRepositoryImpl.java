@@ -22,7 +22,7 @@ public class SessionRepositoryImpl implements SessionRepositoryCustom{
     public Option<Session> findByIdOption (Long id) {
 
         Query query = entityManager
-                .createQuery("SELECT s FROM sessions s WHERE s.session_id = :id");
+                .createQuery("select s from sessions s where s.session_id = :id");
 
         List<Session> result = query.setParameter("id", id).getResultList();
 
@@ -37,7 +37,7 @@ public class SessionRepositoryImpl implements SessionRepositoryCustom{
     public Integer deleteByIdOption (Long id) {
 
         return entityManager
-                .createQuery("DELETE FROM sessions WHERE session_id = :id")
+                .createQuery("delete from sessions where session_id = :id")
                 .setParameter("id", id)
                 .executeUpdate();
     }
