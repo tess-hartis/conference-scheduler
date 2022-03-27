@@ -1,7 +1,9 @@
 package com.example.conferencescheduler.domain.valueobjects;
 
+import io.vavr.control.Validation;
 import lombok.Value;
-import org.hibernate.boot.model.naming.IllegalIdentifierException;
+
+import java.util.Objects;
 
 @Value
 public class SessionDescription {

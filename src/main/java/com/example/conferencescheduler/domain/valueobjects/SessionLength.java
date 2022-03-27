@@ -1,7 +1,6 @@
 package com.example.conferencescheduler.domain.valueobjects;
 
-import com.example.conferencescheduler.domain.Session;
-import com.sun.istack.NotNull;
+import io.vavr.control.Validation;
 import lombok.Value;
 
 @Value

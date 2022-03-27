@@ -1,5 +1,6 @@
 package com.example.conferencescheduler.domain.valueobjects;
 
+import io.vavr.control.Validation;
 import lombok.Value;
 
 @Value
