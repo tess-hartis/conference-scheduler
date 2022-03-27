@@ -42,10 +42,12 @@ public class SpeakersController {
 
     @GetMapping
     @RequestMapping("{id}")
-    public GetSpeakerDto get(@PathVariable Long id){
+    public ResponseEntity<GetSpeakerDto> get(@PathVariable Long id){
 
-        var speaker = speakerRepository.getById(id);
-        return GetSpeakerDto.fromSpeaker(speaker);
+        var input = speakerRepository.findByIdOption(id);
+        return API.Match(input).of(
+                Case($Some($()), x -> new ResponseEntity<>(GetSpeakerDto.fromSpeaker(x), HttpStatus.OK)),
+                Case($None(), () -> new ResponseEntity<>(HttpStatus.NOT_FOUND)));
     }
 
     @PostMapping
