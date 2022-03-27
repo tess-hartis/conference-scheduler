@@ -64,8 +64,12 @@ public class SpeakersController {
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
-    public void delete(@PathVariable Long id) {
-        speakerRepository.deleteById(id);
+    public ResponseEntity<HttpStatus> delete(@PathVariable Long id) {
+
+       var input = speakerRepository.deleteByIdInteger(id);
+       return API.Match(input).of(
+               Case($(0), new ResponseEntity<>(HttpStatus.BAD_REQUEST)),
+               Case($(1), new ResponseEntity<>(HttpStatus.NO_CONTENT)));
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.PUT)
