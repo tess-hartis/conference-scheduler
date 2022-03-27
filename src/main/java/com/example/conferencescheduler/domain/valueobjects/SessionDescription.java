@@ -14,10 +14,10 @@ public class SessionDescription {
         this.value = Objects.requireNonNullElse(value, "");
     }
 
-    public String value() {
-        if (this.sessionDescription == null)
-            return "";
+    public static Validation<String, SessionDescription> validate(String description) {
+        if (description.length() > 1000)
+            return Validation.invalid("Description too long");
 
-        return this.sessionDescription;
+        else return Validation.valid(new SessionDescription(description));
     }
 }

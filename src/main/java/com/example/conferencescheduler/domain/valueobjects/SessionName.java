@@ -12,13 +12,25 @@ public class SessionName{
         this.value = value;
     }
 
-       if (name.isEmpty())
-           throw new IllegalArgumentException("Invalid name");
+//   public static SessionName of(String name) {
+//       if (name == null)
+//           throw new IllegalArgumentException("Invalid name");
+//
+//       if (name.isEmpty())
+//           throw new IllegalArgumentException("Invalid name");
+//
+//       return new SessionName(name);
+//   }
+//
+//    public String value(){
+//        return this.sessionName;
+//    }
 
-       return new SessionName(name);
-   }
+    public static Validation<String, SessionName> validate(String name){
+        if (name.isEmpty())
+            return Validation.invalid("Name cannot be empty");
 
-    public String value(){
-        return this.sessionName;
+        else return Validation.valid(new SessionName(name));
     }
+
 }
