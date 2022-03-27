@@ -6,5 +6,5 @@ import io.vavr.control.Option;
 public interface SessionRepositoryCustom {
 
     Option<Session> findByIdOption(Long id);
-    Integer deleteByIdOption(Long id);
+    Integer deleteByIdInteger(Long id);
 }
