@@ -34,7 +34,7 @@ public class SessionRepositoryImpl implements SessionRepositoryCustom{
 
     @Override
     @Transactional
-    public Integer deleteByIdOption (Long id) {
+    public Integer deleteByIdInteger(Long id) {
 
         return entityManager
                 .createQuery("delete from sessions where session_id = :id")
