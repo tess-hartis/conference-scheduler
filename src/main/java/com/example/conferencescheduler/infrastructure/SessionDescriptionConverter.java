@@ -12,7 +12,7 @@ public class SessionDescriptionConverter implements AttributeConverter<SessionDe
         if (sessionDescription == null) {
             return null;
         }
-        return sessionDescription.value();
+        return sessionDescription.value;
     }
 
     @Override

@@ -13,7 +13,7 @@ public class SessionNameConverter implements AttributeConverter<SessionName, Str
         if (sessionName == null) {
             return null;
         }
-        return sessionName.value();
+        return sessionName.value;
     }
 
     @Override

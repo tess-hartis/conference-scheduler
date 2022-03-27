@@ -10,7 +10,7 @@ public class SessionLengthConverter implements AttributeConverter<SessionLength,
         if (sessionLength == null) {
             return null;
         }
-        return sessionLength.value();
+        return sessionLength.value;
     }
 
     @Override

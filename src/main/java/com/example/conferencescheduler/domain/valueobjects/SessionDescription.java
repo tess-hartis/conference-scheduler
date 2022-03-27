@@ -6,16 +6,10 @@ import org.hibernate.boot.model.naming.IllegalIdentifierException;
 @Value
 public class SessionDescription {
 
-    private String sessionDescription;
+    public String value;
 
-    public static SessionDescription of(String description) {
-        if (description == null)
-            throw new IllegalArgumentException("Invalid description");
-
-        if (description.isEmpty())
-            throw new IllegalArgumentException("Invalid description");
-
-        return new SessionDescription(description);
+    public SessionDescription(String value){
+        this.value = Objects.requireNonNullElse(value, "");
     }
 
     public String value() {

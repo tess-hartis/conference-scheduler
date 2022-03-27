@@ -13,14 +13,14 @@ public class GetSessionDto {
 
         var dto = new GetSessionDto();
         dto.session_id = session.getSession_id();
-        dto.session_name = session.getSession_name().value();
-        dto.session_length = session.getSession_length().value();
+        dto.session_name = session.getSession_name().value;
+        dto.session_length = session.getSession_length().value;
 
         if (session.getSession_description() == null)
             dto.session_description = "No description provided";
 
         if (session.getSession_description() != null)
-            dto.session_description = session.getSession_description().value();
+            dto.session_description = session.getSession_description().value;
 
         return dto;
     }

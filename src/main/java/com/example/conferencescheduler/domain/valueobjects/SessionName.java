@@ -5,11 +5,11 @@ import lombok.Value;
 @Value
 public class SessionName{
 
-    String sessionName;
+    public String value;
 
-   public static SessionName of(String name) {
-       if (name == null)
-           throw new IllegalArgumentException("Invalid name");
+    public SessionName(String value){
+        this.value = value;
+    }
 
        if (name.isEmpty())
            throw new IllegalArgumentException("Invalid name");
