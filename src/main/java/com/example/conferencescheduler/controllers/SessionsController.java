@@ -12,12 +12,13 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static io.vavr.API.*;
-import static io.vavr.Patterns.$None;
-import static io.vavr.Patterns.$Some;
+import static io.vavr.Patterns.*;
+import static org.springframework.http.ResponseEntity.*;
 
 @RestController
 @RequestMapping("/api/v1/sessions")
@@ -72,23 +73,32 @@ public class SessionsController {
     @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
     public ResponseEntity<HttpStatus> delete(@PathVariable Long id) {
 
-        var input = sessionRepository.deleteByIdOption(id);
+        var input = sessionRepository.deleteByIdInteger(id);
         return Match(input).of(
-                Case($(0),new ResponseEntity<>(HttpStatus.BAD_REQUEST)),
+                Case($(0), new ResponseEntity<>(HttpStatus.BAD_REQUEST)),
                 Case($(1), new ResponseEntity<>(HttpStatus.NO_CONTENT)));
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.PUT)
-    public void update(@PathVariable Long id, @RequestBody PostSessionDto dto) {
+    public ResponseEntity update(@PathVariable Long id, @RequestBody PostSessionDto dto) {
 
-        Session existingSession = sessionRepository.getById(id);
+        var existingSession = sessionRepository.findByIdOption(id);
 
-        var name = SessionName.of(dto.session_name);
-        var description = SessionDescription.of(dto.session_description);
-        var length = SessionLength.of(dto.session_length);
-        var session = existingSession.Update(name, description, length);
+        var name = SessionName.validate(dto.session_name);
+        var description = SessionDescription.validate(dto.session_description);
+        var length = SessionLength.validate(dto.session_length);
 
-        BeanUtils.copyProperties(session, existingSession, "session_id");
-        sessionRepository.saveAndFlush(existingSession);
+        var result = existingSession
+                .map(s -> Validation.combine(name, description, length)
+                        .ap(s::Update));
+
+        return Match(result).of(
+                Case($Some($()),
+                        x -> x.fold(e -> unprocessableEntity().body(e.toJavaList()),
+                                s -> ok(sessionRepository.saveAndFlush(s)))),
+                Case($None(), () -> new ResponseEntity<>(HttpStatus.NOT_FOUND)));
+
+//        BeanUtils.copyProperties(session, existingSession, "session_id");
+//        sessionRepository.saveAndFlush(existingSession);
     }
 }
