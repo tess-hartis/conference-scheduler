@@ -3,6 +3,9 @@ package com.example.conferencescheduler.domain.valueobjects;
 import io.vavr.control.Validation;
 import lombok.Value;
 
+import static io.vavr.control.Validation.invalid;
+import static io.vavr.control.Validation.valid;
+
 @Value
 public class SessionLength {
 
@@ -30,9 +33,9 @@ public class SessionLength {
 
     public static Validation<String, SessionLength> validate(Integer length){
         if (length > 120 || length < 30)
-            return Validation.invalid("Invalid session length");
+            return invalid("Invalid session length");
 
-        else return Validation.valid(new SessionLength(length));
+        else return valid(new SessionLength(length));
 
     }
 }
