@@ -77,7 +77,7 @@ public class SpeakersController {
 
         Speaker existingSpeaker = speakerRepository.getById(id);
 
-        var firstName = SpeakerFirstName.of(dto.first_name);
+        var firstName = SpeakerName.of(dto.first_name);
         var lastName = SpeakerLastName.of(dto.last_name);
         var title = SpeakerTitle.of(dto.title);
         var company = SpeakerCompany.of(dto.company);

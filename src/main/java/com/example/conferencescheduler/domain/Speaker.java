@@ -1,12 +1,10 @@
 package com.example.conferencescheduler.domain;
 
 import com.example.conferencescheduler.domain.valueobjects.SpeakerCompany;
-import com.example.conferencescheduler.domain.valueobjects.SpeakerFirstName;
-import com.example.conferencescheduler.domain.valueobjects.SpeakerLastName;
+import com.example.conferencescheduler.domain.valueobjects.SpeakerName;
 import com.example.conferencescheduler.domain.valueobjects.SpeakerTitle;
 import com.example.conferencescheduler.infrastructure.SpeakerCompanyConverter;
-import com.example.conferencescheduler.infrastructure.SpeakerFirstNameConverter;
-import com.example.conferencescheduler.infrastructure.SpeakerLastNameConverter;
+import com.example.conferencescheduler.infrastructure.SpeakerNameConverter;
 import com.example.conferencescheduler.infrastructure.SpeakerTitleConverter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -27,12 +25,12 @@ public class Speaker {
     private Long speaker_id;
 
     @Getter
-    @Convert(converter = SpeakerFirstNameConverter.class)
-    private SpeakerFirstName first_name;
+    @Convert(converter = SpeakerNameConverter.class)
+    private SpeakerName first_name;
 
     @Getter
-    @Convert(converter = SpeakerLastNameConverter.class)
-    private SpeakerLastName last_name;
+    @Convert(converter = SpeakerNameConverter.class)
+    private SpeakerName last_name;
 
     @Getter
     @Convert(converter = SpeakerTitleConverter.class)
@@ -52,8 +50,8 @@ public class Speaker {
     @JsonIgnore
     private List<Session> sessions;
 
-    public static Speaker of(SpeakerFirstName first_name,
-                             SpeakerLastName last_name,
+    public static Speaker of(SpeakerName first_name,
+                             SpeakerName last_name,
                              SpeakerTitle title,
                              SpeakerCompany company,
                              String speaker_bio) {
@@ -67,8 +65,8 @@ public class Speaker {
         return speaker;
     }
 
-    public Speaker Update(SpeakerFirstName first_name,
-                          SpeakerLastName last_name,
+    public Speaker Update(SpeakerName first_name,
+                          SpeakerName last_name,
                           SpeakerTitle title,
                           SpeakerCompany company,
                           String speaker_bio){
@@ -88,6 +86,4 @@ public class Speaker {
     public void setSpeaker_photo(byte[] speaker_photo) {
         this.speaker_photo = speaker_photo;
     }
-
-
 }
