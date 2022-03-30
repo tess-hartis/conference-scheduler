@@ -8,7 +8,7 @@ public class SessionName{
 
     public String value;
 
-    public SessionName(String value){
+    private SessionName(String value){
         this.value = value;
     }
 
