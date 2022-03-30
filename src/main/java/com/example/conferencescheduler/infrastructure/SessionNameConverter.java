@@ -21,6 +21,7 @@ public class SessionNameConverter implements AttributeConverter<SessionName, Str
         if (dbSessionName == null || dbSessionName.isEmpty()) {
             return null;
         }
-        return new SessionName(dbSessionName);
+
+        return SessionName.validate(dbSessionName).get();
     }
 }
