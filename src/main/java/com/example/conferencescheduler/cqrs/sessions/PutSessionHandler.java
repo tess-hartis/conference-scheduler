@@ -1,9 +1,9 @@
 package com.example.conferencescheduler.cqrs.sessions;
 
 import com.example.conferencescheduler.domain.Session;
-import com.example.conferencescheduler.domain.valueobjects.SessionDescription;
+import com.example.conferencescheduler.domain.valueobjects.DescriptionBio;
 import com.example.conferencescheduler.domain.valueobjects.SessionLength;
-import com.example.conferencescheduler.domain.valueobjects.SessionName;
+import com.example.conferencescheduler.domain.valueobjects.NameTitle;
 import com.example.conferencescheduler.repositories.SessionRepository;
 import io.vavr.Value;
 import io.vavr.control.Option;
@@ -19,17 +19,17 @@ public class PutSessionHandler {
 
     private final SessionRepository sessionRepository;
 
-    public Option<Validation<List<String>, Session>> handle(PutSessionCommand command){
+    public Option<Validation<List<String>, Session>> handle(PutSessionCommand request){
 
-        var existingSession = sessionRepository.findByIdOption(command.id);
+        var existingSession = sessionRepository.findByIdOption(request.id);
 
-        var name= SessionName.validate(command.session_name);
-        var description = SessionDescription.validate(command.session_description);
-        var length = SessionLength.validate(command.session_length);
+        var name= NameTitle.validate(request.session_name);
+        var description = DescriptionBio.validate(request.session_description);
+        var length = SessionLength.validate(request.session_length);
 
         return existingSession
                 .map(s -> Validation.combine(name, description, length)
-                        .ap((s::update))
+                        .ap(s::update)
                         .map(sessionRepository::saveAndFlush)
                         .mapError(Value::toJavaList));
     }
