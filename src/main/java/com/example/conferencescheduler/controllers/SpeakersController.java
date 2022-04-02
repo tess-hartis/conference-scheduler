@@ -2,8 +2,7 @@ package com.example.conferencescheduler.controllers;
 
 import com.example.conferencescheduler.domain.Speaker;
 import com.example.conferencescheduler.domain.valueobjects.SpeakerCompany;
-import com.example.conferencescheduler.domain.valueobjects.SpeakerFirstName;
-import com.example.conferencescheduler.domain.valueobjects.SpeakerLastName;
+import com.example.conferencescheduler.domain.valueobjects.SpeakerName;
 import com.example.conferencescheduler.domain.valueobjects.SpeakerTitle;
 import com.example.conferencescheduler.dtos.GetSpeakerDto;
 import com.example.conferencescheduler.dtos.PostSpeakerDto;
@@ -53,8 +52,8 @@ public class SpeakersController {
     @PostMapping
     public void create(@RequestBody PostSpeakerDto dto){
 
-        var firstName = SpeakerFirstName.of(dto.first_name);
-        var lastName = SpeakerLastName.of(dto.last_name);
+        var firstName = SpeakerName.of(dto.first_name);
+        var lastName = SpeakerName.of(dto.last_name);
         var title = SpeakerTitle.of(dto.title);
         var company = SpeakerCompany.of(dto.company);
         var bio = dto.speaker_bio;
@@ -78,7 +77,7 @@ public class SpeakersController {
         Speaker existingSpeaker = speakerRepository.getById(id);
 
         var firstName = SpeakerName.of(dto.first_name);
-        var lastName = SpeakerLastName.of(dto.last_name);
+        var lastName = SpeakerName.of(dto.last_name);
         var title = SpeakerTitle.of(dto.title);
         var company = SpeakerCompany.of(dto.company);
         var bio = dto.speaker_bio;
