@@ -1,6 +1,6 @@
 package com.example.conferencescheduler.controllers;
 
-import com.example.conferencescheduler.cqrs.*;
+import com.example.conferencescheduler.cqrs.sessions.*;
 import com.example.conferencescheduler.dtos.GetSessionDto;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;

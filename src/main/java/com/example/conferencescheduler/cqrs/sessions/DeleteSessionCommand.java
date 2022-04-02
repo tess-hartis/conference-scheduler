@@ -1,4 +1,4 @@
-package com.example.conferencescheduler.cqrs;
+package com.example.conferencescheduler.cqrs.sessions;
 
 import lombok.AllArgsConstructor;
 

@@ -1,4 +1,4 @@
-package com.example.conferencescheduler.cqrs;
+package com.example.conferencescheduler.cqrs.sessions;
 
 import com.example.conferencescheduler.domain.Session;
 import com.example.conferencescheduler.domain.valueobjects.SessionDescription;
