@@ -20,8 +20,6 @@ public class SessionDescriptionConverter implements AttributeConverter<SessionDe
         if (dbSessionDescription == null || dbSessionDescription.isEmpty()) {
             return null;
         }
-//        SessionDescription sessionDescription = new SessionDescription(dbSessionDescription);
-//        return sessionDescription;
         return SessionDescription.validate(dbSessionDescription).get();
     }
 }
