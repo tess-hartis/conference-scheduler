@@ -5,7 +5,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication(scanBasePackages=
         {
-                "com.example.conferencescheduler.cqrs",
+                "com.example.conferencescheduler.cqrs.sessions",
+                "com.example.conferencescheduler.cqrs.speakers",
                 "com.example.conferencescheduler.controllers",
                 "com.example.conferencescheduler.domain",
                 "com.example.conferencescheduler.dtos",
