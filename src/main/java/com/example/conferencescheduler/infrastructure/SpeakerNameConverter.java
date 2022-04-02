@@ -21,7 +21,6 @@ public class SpeakerNameConverter implements AttributeConverter<SpeakerName, Str
         if (dbSpeakerName == null || dbSpeakerName.isEmpty()) {
             return null;
         }
-        SpeakerName speakerName = new SpeakerName(dbSpeakerName);
-        return speakerName;
+        return new SpeakerName(dbSpeakerName);
     }
 }
