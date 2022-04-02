@@ -3,9 +3,11 @@ package com.example.conferencescheduler.cqrs;
 import com.example.conferencescheduler.domain.Session;
 import com.example.conferencescheduler.repositories.SessionRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component
 @AllArgsConstructor
 public class GetSessionsHandler {
 
