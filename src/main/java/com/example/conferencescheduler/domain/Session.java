@@ -49,7 +49,7 @@ public class Session {
         return session;
     }
 
-    public Session Update(SessionName session_name, SessionDescription session_description, SessionLength session_length) {
+    public Session update(SessionName session_name, SessionDescription session_description, SessionLength session_length) {
         this.session_name = session_name;
         this.session_description = session_description;
         this.session_length = session_length;
