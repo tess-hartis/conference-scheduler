@@ -6,10 +6,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.stream.Collectors;
-
 import static io.vavr.API.*;
 import static io.vavr.Patterns.$None;
 import static io.vavr.Patterns.$Some;
