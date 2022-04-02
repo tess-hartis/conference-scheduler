@@ -2,7 +2,6 @@ package com.example.conferencescheduler.controllers;
 
 import com.example.conferencescheduler.cqrs.speakers.*;
 import com.example.conferencescheduler.dtos.GetSpeakerDto;
-import io.vavr.API;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -58,7 +57,7 @@ public class SpeakersController {
 
        var request = new DeleteSpeakerCommand(id);
        var response = speakerWriteHandler.handleDelete(request);
-       return API.Match(response).of(
+       return Match(response).of(
                Case($(0), new ResponseEntity<>(HttpStatus.BAD_REQUEST)),
                Case($(1), new ResponseEntity<>(HttpStatus.NO_CONTENT)));
     }
