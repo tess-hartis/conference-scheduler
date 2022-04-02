@@ -29,7 +29,7 @@ public class SpeakerRepositoryImpl implements SpeakerRepositoryCustom{
 
     @Override
     @Transactional
-    public Integer deleteByIdInteger(Long id) {
+    public Integer deleteByIdCustom(Long id) {
 
         return entityManager
                 .createQuery("delete from speakers where speaker_id = :id")

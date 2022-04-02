@@ -6,5 +6,5 @@ import io.vavr.control.Option;
 public interface SpeakerRepositoryCustom {
 
     Option<Speaker> findByIdOption (Long id);
-    Integer deleteByIdInteger (Long id);
+    Integer deleteByIdCustom(Long id);
 }

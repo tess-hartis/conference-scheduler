@@ -2,10 +2,9 @@ package com.example.conferencescheduler.repositories;
 
 
 import com.example.conferencescheduler.domain.Session;
-import io.vavr.API;
 import io.vavr.control.Option;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -34,7 +33,7 @@ public class SessionRepositoryImpl implements SessionRepositoryCustom{
 
     @Override
     @Transactional
-    public Integer deleteByIdInteger(Long id) {
+    public Integer deleteByIdCustom(Long id) {
 
         return entityManager
                 .createQuery("delete from sessions where session_id = :id")
