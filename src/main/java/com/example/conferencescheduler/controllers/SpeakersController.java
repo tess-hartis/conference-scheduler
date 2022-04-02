@@ -22,17 +22,14 @@ import static org.springframework.http.ResponseEntity.unprocessableEntity;
 @RequestMapping("/api/v1/speakers")
 public class SpeakersController {
 
-   private final PostSpeakerHandler postSpeakerHandler;
-   private final PutSpeakerHandler putSpeakerHandler;
-   private final DeleteSpeakerHandler deleteSpeakerHandler;
-   private final GetSpeakerHandler getSpeakerHandler;
-   private final GetSpeakersHandler getSpeakersHandler;
+   private final SpeakerWriteHandler speakerWriteHandler;
+   private final SpeakerReadHandler speakerReadHandler;
 
     @GetMapping
     public List<GetSpeakerDto> list() {
 
         var request = new GetSpeakersQuery();
-        var response = getSpeakersHandler.handle(request);
+        var response = speakerReadHandler.handleGetAll(request);
         return response.stream()
                 .map(GetSpeakerDto::fromSpeaker)
                 .collect(Collectors.toList());
@@ -43,7 +40,7 @@ public class SpeakersController {
     public ResponseEntity<GetSpeakerDto> get(@PathVariable Long id){
 
         var request = new GetSpeakerQuery(id);
-        var response = getSpeakerHandler.handle(request);
+        var response = speakerReadHandler.handleGetOne(request);
         return Match(response).of(
                 Case($Some($()), x -> new ResponseEntity<>(GetSpeakerDto.fromSpeaker(x), HttpStatus.OK)),
                 Case($None(), () -> new ResponseEntity<>(HttpStatus.NOT_FOUND)));
@@ -52,7 +49,7 @@ public class SpeakersController {
     @PostMapping
     public ResponseEntity create(@RequestBody PostSpeakerCommand request){
 
-        var response = postSpeakerHandler.handle(request);
+        var response = speakerWriteHandler.handlePost(request);
         return response.fold(e -> unprocessableEntity().body(e), s -> ok(GetSpeakerDto.fromSpeaker(s)));
     }
 
@@ -60,7 +57,7 @@ public class SpeakersController {
     public ResponseEntity<HttpStatus> delete(@PathVariable Long id) {
 
        var request = new DeleteSpeakerCommand(id);
-       var response = deleteSpeakerHandler.handle(request);
+       var response = speakerWriteHandler.handleDelete(request);
        return API.Match(response).of(
                Case($(0), new ResponseEntity<>(HttpStatus.BAD_REQUEST)),
                Case($(1), new ResponseEntity<>(HttpStatus.NO_CONTENT)));
@@ -70,7 +67,7 @@ public class SpeakersController {
     public ResponseEntity update(@PathVariable Long id, @RequestBody PutSpeakerCommand request) {
 
         request.id = id;
-        var response = putSpeakerHandler.handle(request);
+        var response = speakerWriteHandler.handlePut(request);
         return Match(response).of(
                 Case($Some($()), x ->
                         x.fold(e -> unprocessableEntity().body(e), s -> ok(GetSpeakerDto.fromSpeaker(s)))),

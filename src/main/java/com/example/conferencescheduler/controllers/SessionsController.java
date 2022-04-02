@@ -20,18 +20,14 @@ import static org.springframework.http.ResponseEntity.*;
 @RequestMapping("/api/v1/sessions")
 public class SessionsController {
 
-    private final PostSessionHandler postSessionHandler;
-    private final PutSessionHandler putSessionHandler;
-    private final DeleteSessionHandler deleteSessionHandler;
-    private final GetSessionHandler getSessionHandler;
-    private final GetSessionsHandler getSessionsHandler;
-
+    private final SessionWriteHandler sessionWriteHandler;
+    private final SessionReadHandler sessionReadHandler;
 
     @GetMapping
     public List<GetSessionDto> list() {
 
         var request = new GetSessionsQuery();
-        var response = getSessionsHandler.handle(request);
+        var response = sessionReadHandler.handleGetAll(request);
         return response.stream()
                 .map(GetSessionDto::fromSession)
                 .collect(Collectors.toList());
@@ -42,7 +38,7 @@ public class SessionsController {
     public ResponseEntity get(@PathVariable Long id) {
 
         var request = new GetSessionQuery(id);
-        var response = getSessionHandler.handle(request);
+        var response = sessionReadHandler.handleGetOne(request);
         return Match(response).of(
                 Case($Some($()), x -> new ResponseEntity<>(GetSessionDto.fromSession(x), HttpStatus.OK)),
                 Case($None(), () -> new ResponseEntity<>(HttpStatus.NOT_FOUND)));
@@ -55,7 +51,7 @@ public class SessionsController {
     @PostMapping
     public ResponseEntity create(@RequestBody PostSessionCommand request) {
 
-        var response = postSessionHandler.handle(request);
+        var response = sessionWriteHandler.handlePost(request);
         return response.fold(e -> unprocessableEntity().body(e), s -> ok(GetSessionDto.fromSession(s)));
     }
 
@@ -63,7 +59,7 @@ public class SessionsController {
     public ResponseEntity<HttpStatus> delete(@PathVariable Long id) {
 
         var request = new DeleteSessionCommand(id);
-        var response = deleteSessionHandler.handle(request);
+        var response = sessionWriteHandler.handleDelete(request);
         return Match(response).of(
                 Case($(0), new ResponseEntity<>(HttpStatus.NOT_FOUND)),
                 Case($(1), new ResponseEntity<>(HttpStatus.NO_CONTENT)));
@@ -73,7 +69,7 @@ public class SessionsController {
     public ResponseEntity update(@PathVariable Long id, @RequestBody PutSessionCommand request) {
 
         request.id = id;
-        var response = putSessionHandler.handle(request);
+        var response = sessionWriteHandler.handlePut(request);
         return Match(response).of(
                 Case($Some($()), x ->
                         x.fold(e -> unprocessableEntity().body(e), s -> ok(GetSessionDto.fromSession(s)))),
