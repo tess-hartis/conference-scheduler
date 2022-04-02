@@ -6,13 +6,19 @@ import io.vavr.control.Option;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 @AllArgsConstructor
-public class GetSessionHandler {
+public class SessionReadHandler {
 
     private final SessionRepository sessionRepository;
 
-    public Option<Session> handle(GetSessionQuery request){
+    public Option<Session> handleGetOne(GetSessionQuery request){
         return sessionRepository.findByIdOption(request.id);
+    }
+
+    public List<Session> handleGetAll(GetSessionsQuery request){
+        return sessionRepository.findAll();
     }
 }
