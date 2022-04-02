@@ -13,7 +13,7 @@ public class GetSessionsHandler {
 
     private final SessionRepository sessionRepository;
 
-    public List<Session> handle(GetSessionsQuery query){
+    public List<Session> handle(GetSessionsQuery request){
         return sessionRepository.findAll();
     }
 }
