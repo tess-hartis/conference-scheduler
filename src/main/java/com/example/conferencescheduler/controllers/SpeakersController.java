@@ -1,40 +1,39 @@
 package com.example.conferencescheduler.controllers;
 
-import com.example.conferencescheduler.domain.Speaker;
-import com.example.conferencescheduler.domain.valueobjects.SpeakerCompany;
-import com.example.conferencescheduler.domain.valueobjects.SpeakerName;
-import com.example.conferencescheduler.domain.valueobjects.SpeakerTitle;
+import com.example.conferencescheduler.cqrs.speakers.*;
 import com.example.conferencescheduler.dtos.GetSpeakerDto;
-import com.example.conferencescheduler.dtos.PostSpeakerDto;
-import com.example.conferencescheduler.repositories.SpeakerRepository;
 import io.vavr.API;
-import org.springframework.beans.BeanUtils;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static io.vavr.API.$;
-import static io.vavr.API.Case;
+import static io.vavr.API.*;
 import static io.vavr.Patterns.$None;
 import static io.vavr.Patterns.$Some;
+import static org.springframework.http.ResponseEntity.ok;
+import static org.springframework.http.ResponseEntity.unprocessableEntity;
 
 @RestController
+@AllArgsConstructor
 @RequestMapping("/api/v1/speakers")
 public class SpeakersController {
 
-    private final SpeakerRepository speakerRepository;
-
-    public SpeakersController(SpeakerRepository speakerRepository){
-        this.speakerRepository = speakerRepository;
-    }
+   private final PostSpeakerHandler postSpeakerHandler;
+   private final PutSpeakerHandler putSpeakerHandler;
+   private final DeleteSpeakerHandler deleteSpeakerHandler;
+   private final GetSpeakerHandler getSpeakerHandler;
+   private final GetSpeakersHandler getSpeakersHandler;
 
     @GetMapping
     public List<GetSpeakerDto> list() {
 
-        var speakers = speakerRepository.findAll();
-        return speakers.stream()
+        var request = new GetSpeakersQuery();
+        var response = getSpeakersHandler.handle(request);
+        return response.stream()
                 .map(GetSpeakerDto::fromSpeaker)
                 .collect(Collectors.toList());
     }
@@ -43,47 +42,39 @@ public class SpeakersController {
     @RequestMapping("{id}")
     public ResponseEntity<GetSpeakerDto> get(@PathVariable Long id){
 
-        var input = speakerRepository.findByIdOption(id);
-        return API.Match(input).of(
+        var request = new GetSpeakerQuery(id);
+        var response = getSpeakerHandler.handle(request);
+        return Match(response).of(
                 Case($Some($()), x -> new ResponseEntity<>(GetSpeakerDto.fromSpeaker(x), HttpStatus.OK)),
                 Case($None(), () -> new ResponseEntity<>(HttpStatus.NOT_FOUND)));
     }
 
     @PostMapping
-    public void create(@RequestBody PostSpeakerDto dto){
+    public ResponseEntity create(@RequestBody PostSpeakerCommand request){
 
-        var firstName = SpeakerName.of(dto.first_name);
-        var lastName = SpeakerName.of(dto.last_name);
-        var title = SpeakerTitle.of(dto.title);
-        var company = SpeakerCompany.of(dto.company);
-        var bio = dto.speaker_bio;
-
-        var speaker = Speaker.of(firstName, lastName, title, company, bio);
-        speakerRepository.saveAndFlush(speaker);
+        var response = postSpeakerHandler.handle(request);
+        return response.fold(e -> unprocessableEntity().body(e), s -> ok(GetSpeakerDto.fromSpeaker(s)));
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
     public ResponseEntity<HttpStatus> delete(@PathVariable Long id) {
 
-       var input = speakerRepository.deleteByIdCustom(id);
-       return API.Match(input).of(
+       var request = new DeleteSpeakerCommand(id);
+       var response = deleteSpeakerHandler.handle(request);
+       return API.Match(response).of(
                Case($(0), new ResponseEntity<>(HttpStatus.BAD_REQUEST)),
                Case($(1), new ResponseEntity<>(HttpStatus.NO_CONTENT)));
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.PUT)
-    public void update(@PathVariable Long id, @RequestBody PostSpeakerDto dto) {
+    public ResponseEntity update(@PathVariable Long id, @RequestBody PutSpeakerCommand request) {
 
-        Speaker existingSpeaker = speakerRepository.getById(id);
+        request.id = id;
+        var response = putSpeakerHandler.handle(request);
+        return Match(response).of(
+                Case($Some($()), x ->
+                        x.fold(e -> unprocessableEntity().body(e), s -> ok(GetSpeakerDto.fromSpeaker(s)))),
+                Case($None(), () -> new ResponseEntity<>(HttpStatus.NOT_FOUND)));
 
-        var firstName = SpeakerName.of(dto.first_name);
-        var lastName = SpeakerName.of(dto.last_name);
-        var title = SpeakerTitle.of(dto.title);
-        var company = SpeakerCompany.of(dto.company);
-        var bio = dto.speaker_bio;
-        var speaker = existingSpeaker.Update(firstName, lastName, title, company, bio);
-
-        BeanUtils.copyProperties(speaker, existingSpeaker, "speaker_id");
-        speakerRepository.saveAndFlush(existingSpeaker);
     }
 }
