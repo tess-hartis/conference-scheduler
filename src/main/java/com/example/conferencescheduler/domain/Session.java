@@ -1,14 +1,15 @@
 package com.example.conferencescheduler.domain;
 
-import com.example.conferencescheduler.domain.valueobjects.SessionDescription;
+import com.example.conferencescheduler.domain.valueobjects.DescriptionBio;
+import com.example.conferencescheduler.domain.valueobjects.NameTitle;
 import com.example.conferencescheduler.domain.valueobjects.SessionLength;
-import com.example.conferencescheduler.domain.valueobjects.SessionName;
-import com.example.conferencescheduler.infrastructure.SessionDescriptionConverter;
+import com.example.conferencescheduler.infrastructure.DescriptionBioConverter;
+import com.example.conferencescheduler.infrastructure.NameTitleConverter;
 import com.example.conferencescheduler.infrastructure.SessionLengthConverter;
-import com.example.conferencescheduler.infrastructure.SessionNameConverter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -22,12 +23,12 @@ public class Session {
     private Long session_id;
 
     @Getter
-    @Convert(converter = SessionNameConverter.class)
-    private SessionName session_name;
+    @Convert(converter = NameTitleConverter.class)
+    private NameTitle session_name;
 
     @Getter
-    @Convert(converter = SessionDescriptionConverter.class)
-    private SessionDescription session_description;
+    @Convert(converter = DescriptionBioConverter.class)
+    private DescriptionBio session_description;
 
     @Getter
     @Convert(converter = SessionLengthConverter.class)
@@ -40,7 +41,7 @@ public class Session {
             inverseJoinColumns = @JoinColumn(name = "speaker_id"))
     private List<Speaker> speakers;
 
-    public static Session of(SessionName session_name, SessionDescription session_description, SessionLength session_length) {
+    public static Session of(NameTitle session_name, DescriptionBio session_description, SessionLength session_length) {
 
         var session = new Session();
         session.session_name = session_name;
@@ -49,7 +50,7 @@ public class Session {
         return session;
     }
 
-    public Session update(SessionName session_name, SessionDescription session_description, SessionLength session_length) {
+    public Session update(NameTitle session_name, DescriptionBio session_description, SessionLength session_length) {
         this.session_name = session_name;
         this.session_description = session_description;
         this.session_length = session_length;
