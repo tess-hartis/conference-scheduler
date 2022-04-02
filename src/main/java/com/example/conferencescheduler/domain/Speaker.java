@@ -1,11 +1,9 @@
 package com.example.conferencescheduler.domain;
 
-import com.example.conferencescheduler.domain.valueobjects.SpeakerCompany;
-import com.example.conferencescheduler.domain.valueobjects.SpeakerName;
-import com.example.conferencescheduler.domain.valueobjects.SpeakerTitle;
-import com.example.conferencescheduler.infrastructure.SpeakerCompanyConverter;
-import com.example.conferencescheduler.infrastructure.SpeakerNameConverter;
-import com.example.conferencescheduler.infrastructure.SpeakerTitleConverter;
+import com.example.conferencescheduler.domain.valueobjects.DescriptionBio;
+import com.example.conferencescheduler.domain.valueobjects.NameTitle;
+import com.example.conferencescheduler.infrastructure.DescriptionBioConverter;
+import com.example.conferencescheduler.infrastructure.NameTitleConverter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
@@ -25,22 +23,24 @@ public class Speaker {
     private Long speaker_id;
 
     @Getter
-    @Convert(converter = SpeakerNameConverter.class)
-    private SpeakerName first_name;
+    @Convert(converter = NameTitleConverter.class)
+    private NameTitle first_name;
 
     @Getter
-    @Convert(converter = SpeakerNameConverter.class)
-    private SpeakerName last_name;
+    @Convert(converter = NameTitleConverter.class)
+    private NameTitle last_name;
 
     @Getter
-    @Convert(converter = SpeakerTitleConverter.class)
-    private SpeakerTitle title;
+    @Convert(converter = NameTitleConverter.class)
+    private NameTitle title;
 
     @Getter
-    @Convert(converter = SpeakerCompanyConverter.class)
-    private SpeakerCompany company;
+    @Convert(converter = NameTitleConverter.class)
+    private NameTitle company;
 
-    private String speaker_bio;
+    @Getter
+    @Convert(converter = DescriptionBioConverter.class)
+    private DescriptionBio speaker_bio;
 
     @Lob
     @Type(type="org.hibernate.type.BinaryType")
@@ -50,11 +50,11 @@ public class Speaker {
     @JsonIgnore
     private List<Session> sessions;
 
-    public static Speaker of(SpeakerName first_name,
-                             SpeakerName last_name,
-                             SpeakerTitle title,
-                             SpeakerCompany company,
-                             String speaker_bio) {
+    public static Speaker of(NameTitle first_name,
+                             NameTitle last_name,
+                             NameTitle title,
+                             NameTitle company,
+                             DescriptionBio speaker_bio) {
 
         var speaker = new Speaker();
         speaker.first_name = first_name;
@@ -65,11 +65,11 @@ public class Speaker {
         return speaker;
     }
 
-    public Speaker Update(SpeakerName first_name,
-                          SpeakerName last_name,
-                          SpeakerTitle title,
-                          SpeakerCompany company,
-                          String speaker_bio){
+    public Speaker Update(NameTitle first_name,
+                          NameTitle last_name,
+                          NameTitle title,
+                          NameTitle company,
+                          DescriptionBio speaker_bio){
 
         this.first_name = first_name;
         this.last_name = last_name;
@@ -78,8 +78,6 @@ public class Speaker {
         this.speaker_bio = speaker_bio;
         return this;
     }
-
-    public String getSpeaker_bio() { return speaker_bio; }
     public byte[] getSpeaker_photo() {
         return speaker_photo;
     }
