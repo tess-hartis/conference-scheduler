@@ -1,14 +1,14 @@
 package com.example.conferencescheduler.infrastructure;
 
-import com.example.conferencescheduler.domain.valueobjects.SessionDescription;
+import com.example.conferencescheduler.domain.valueobjects.DescriptionBio;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
 @Converter
-public class SessionDescriptionConverter implements AttributeConverter<SessionDescription, String> {
+public class DescriptionBioConverter implements AttributeConverter<DescriptionBio, String> {
 
     @Override
-    public String convertToDatabaseColumn(SessionDescription sessionDescription) {
+    public String convertToDatabaseColumn(DescriptionBio sessionDescription) {
         if (sessionDescription == null) {
             return null;
         }
@@ -16,10 +16,10 @@ public class SessionDescriptionConverter implements AttributeConverter<SessionDe
     }
 
     @Override
-    public SessionDescription convertToEntityAttribute(String dbSessionDescription) {
+    public DescriptionBio convertToEntityAttribute(String dbSessionDescription) {
         if (dbSessionDescription == null || dbSessionDescription.isEmpty()) {
             return null;
         }
-        return SessionDescription.validate(dbSessionDescription).get();
+        return DescriptionBio.validate(dbSessionDescription).get();
     }
 }
