@@ -1,9 +1,7 @@
 package com.example.conferencescheduler.domain.valueobjects;
 
 import io.vavr.control.Validation;
-import lombok.Value;
 
-@Value
 public class SessionName{
 
     public String value;
@@ -11,20 +9,6 @@ public class SessionName{
     private SessionName(String value){
         this.value = value;
     }
-
-//   public static SessionName of(String name) {
-//       if (name == null)
-//           throw new IllegalArgumentException("Invalid name");
-//
-//       if (name.isEmpty())
-//           throw new IllegalArgumentException("Invalid name");
-//
-//       return new SessionName(name);
-//   }
-//
-//    public String value(){
-//        return this.sessionName;
-//    }
 
     public static Validation<String, SessionName> validate(String name){
         if (name.isEmpty())
