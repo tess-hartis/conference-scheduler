@@ -2,9 +2,16 @@ package com.example.conferencescheduler;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages=
+        {
+                "com.example.conferencescheduler.cqrs",
+                "com.example.conferencescheduler.controllers",
+                "com.example.conferencescheduler.domain",
+                "com.example.conferencescheduler.dtos",
+                "com.example.conferencescheduler.infrastructure",
+                "com.example.conferencescheduler.repositories"
+        })
 public class ConferenceSchedulerApplication {
 
     public static void main(String[] args) {
