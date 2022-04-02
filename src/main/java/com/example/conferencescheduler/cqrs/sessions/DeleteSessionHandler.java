@@ -10,8 +10,8 @@ public class DeleteSessionHandler {
 
     private final SessionRepository sessionRepository;
 
-    public Integer handle(DeleteSessionCommand command){
-        return sessionRepository.deleteByIdCustom(command.id);
+    public Integer handle(DeleteSessionCommand request){
+        return sessionRepository.deleteByIdCustom(request.id);
     }
 
 }
