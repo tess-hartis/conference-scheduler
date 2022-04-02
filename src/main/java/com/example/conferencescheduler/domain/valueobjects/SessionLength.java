@@ -1,12 +1,10 @@
 package com.example.conferencescheduler.domain.valueobjects;
 
 import io.vavr.control.Validation;
-import lombok.Value;
 
 import static io.vavr.control.Validation.invalid;
 import static io.vavr.control.Validation.valid;
 
-@Value
 public class SessionLength {
 
     public Integer value;
