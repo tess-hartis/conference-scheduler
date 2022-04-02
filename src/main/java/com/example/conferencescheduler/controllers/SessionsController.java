@@ -48,7 +48,7 @@ public class SessionsController {
                 Case($None(), () -> new ResponseEntity<>(HttpStatus.NOT_FOUND)));
 
 //        return response.fold(notFound(), x -> new ResponseEntity<>(GetSessionDto.fromSession(x), HttpStatus.OK));
-//        return response.map(x -> ok(GetSessionDto.fromSession(x))).orElse(notFound());
+//        return response.map(x -> ok(GetSessionDto.fromSession(x))).orElse(notFound()));
 
     }
 
