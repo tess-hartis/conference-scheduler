@@ -18,7 +18,7 @@ public class SessionLengthConverter implements AttributeConverter<SessionLength,
         if (dbSessionLength == null) {
             return null;
         }
-        SessionLength sessionLength = new SessionLength(dbSessionLength);
-        return sessionLength;
+
+        return SessionLength.validate(dbSessionLength).get();
     }
 }
