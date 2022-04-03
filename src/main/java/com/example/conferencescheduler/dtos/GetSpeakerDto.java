@@ -15,11 +15,11 @@ public class GetSpeakerDto {
 
         var dto = new GetSpeakerDto();
         dto.speaker_id = speaker.getSpeaker_id();
-        dto.first_name = speaker.getFirst_name().value();
-        dto.last_name = speaker.getLast_name().value();
-        dto.title = speaker.getTitle().value();
-        dto.company = speaker.getCompany().value();
-        dto.speaker_bio = speaker.getSpeaker_bio();
+        dto.first_name = speaker.getFirst_name().value;
+        dto.last_name = speaker.getLast_name().value;
+        dto.title = speaker.getTitle().value;
+        dto.company = speaker.getCompany().value;
+        dto.speaker_bio = speaker.getSpeaker_bio().value;
 
         return dto;
     }
