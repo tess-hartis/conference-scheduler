@@ -42,10 +42,11 @@ public class SpeakerWriteHandler {
 
         return existingSpeaker
                 .map(s -> Validation.combine(firstName, lastName, title, company, bio)
-                        .ap(s::Update)
+                        .ap(s::update)
                         .map(speakerRepository::saveAndFlush)
                         .mapError(Value::toJavaList));
     }
 
     public Integer handleDelete(DeleteSpeakerCommand request){ return speakerRepository.deleteByIdCustom(request.id);}
+
 }
