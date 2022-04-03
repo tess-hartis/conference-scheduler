@@ -56,4 +56,8 @@ public class Session {
         this.session_length = session_length;
         return this;
     }
+
+    public boolean addSpeaker(Speaker speaker){
+        return speakers.add(speaker);
+    }
 }
