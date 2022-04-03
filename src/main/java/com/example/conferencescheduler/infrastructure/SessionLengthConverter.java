@@ -2,7 +2,9 @@ package com.example.conferencescheduler.infrastructure;
 
 import com.example.conferencescheduler.domain.valueobjects.SessionLength;
 import javax.persistence.AttributeConverter;
+import javax.persistence.Converter;
 
+@Converter
 public class SessionLengthConverter implements AttributeConverter<SessionLength, Integer> {
 
     @Override
