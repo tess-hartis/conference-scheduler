@@ -2,7 +2,6 @@ package com.conferencescheduler.controllers;
 
 import com.conferencescheduler.cqrs.services.SpeakerSessionHandler;
 import com.conferencescheduler.cqrs.sessions.*;
-import com.example.conferencescheduler.cqrs.sessions.*;
 import com.conferencescheduler.dtos.GetSessionDto;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
