@@ -1,5 +1,6 @@
 package com.example.conferencescheduler.controllers;
 
+import com.example.conferencescheduler.cqrs.services.SpeakerSessionHandler;
 import com.example.conferencescheduler.cqrs.sessions.*;
 import com.example.conferencescheduler.dtos.GetSessionDto;
 import lombok.AllArgsConstructor;
@@ -20,6 +21,7 @@ public class SessionsController {
 
     private final SessionWriteHandler sessionWriteHandler;
     private final SessionReadHandler sessionReadHandler;
+    private final SpeakerSessionHandler speakerSessionHandler;
 
     @GetMapping
     public List<GetSessionDto> list() {
@@ -72,6 +74,15 @@ public class SessionsController {
                 Case($Some($()), x ->
                         x.fold(e -> unprocessableEntity().body(e), s -> ok(GetSessionDto.fromSession(s)))),
                 Case($None(), () -> new ResponseEntity<>(HttpStatus.NOT_FOUND)));
+    }
+
+    @PostMapping
+    @RequestMapping("{sessionId}/speaker/{speakerId}")
+    public ResponseEntity addSpeaker(@PathVariable Long sessionId, @PathVariable Long speakerId){
+        var response = speakerSessionHandler.addSessionSpeaker(sessionId, speakerId);
+        return Match(response).of(
+                Case($Some($()), x -> ok("Successfully added")),
+                Case($None(), () -> new ResponseEntity<>(HttpStatus.BAD_REQUEST)));
     }
 
 }
