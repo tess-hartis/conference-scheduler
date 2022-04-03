@@ -9,7 +9,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
-
 import javax.persistence.*;
 import java.util.List;
 
@@ -50,11 +49,7 @@ public class Speaker {
     @JsonIgnore
     private List<Session> sessions;
 
-    public static Speaker of(NameTitle first_name,
-                             NameTitle last_name,
-                             NameTitle title,
-                             NameTitle company,
-                             DescriptionBio speaker_bio) {
+    public static Speaker of(NameTitle first_name, NameTitle last_name, NameTitle title, NameTitle company, DescriptionBio speaker_bio) {
 
         var speaker = new Speaker();
         speaker.first_name = first_name;
@@ -65,11 +60,7 @@ public class Speaker {
         return speaker;
     }
 
-    public Speaker Update(NameTitle first_name,
-                          NameTitle last_name,
-                          NameTitle title,
-                          NameTitle company,
-                          DescriptionBio speaker_bio){
+    public Speaker update(NameTitle first_name, NameTitle last_name, NameTitle title, NameTitle company, DescriptionBio speaker_bio){
 
         this.first_name = first_name;
         this.last_name = last_name;
@@ -81,7 +72,9 @@ public class Speaker {
     public byte[] getSpeaker_photo() {
         return speaker_photo;
     }
+
     public void setSpeaker_photo(byte[] speaker_photo) {
         this.speaker_photo = speaker_photo;
     }
+
 }
