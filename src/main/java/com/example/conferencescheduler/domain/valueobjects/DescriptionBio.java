@@ -13,8 +13,11 @@ public class DescriptionBio {
     }
 
     public static Validation<String, DescriptionBio> validate(String descriptionBio) {
-        if (descriptionBio.length() > 1000)
+        if (descriptionBio.length() > 2000)
             return Validation.invalid("Description or bio is too long");
+
+        if(descriptionBio.isEmpty())
+            return Validation.invalid("Description is too short");
 
         else return Validation.valid(new DescriptionBio(descriptionBio));
     }
