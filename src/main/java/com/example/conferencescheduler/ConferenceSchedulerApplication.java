@@ -11,7 +11,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
                 "com.example.conferencescheduler.domain",
                 "com.example.conferencescheduler.dtos",
                 "com.example.conferencescheduler.infrastructure",
-                "com.example.conferencescheduler.repositories"
+                "com.example.conferencescheduler.repositories",
+                "com.example.conferencescheduler.cqrs.services"
         })
 public class ConferenceSchedulerApplication {
 
