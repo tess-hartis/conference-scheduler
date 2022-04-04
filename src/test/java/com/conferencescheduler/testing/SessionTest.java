@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class SessionTest {
 
     @Test
-    void Can_Create_Session_When_Valid() {
+    void can_create_session_if_valid() {
 
         //Arrange
 
@@ -39,7 +39,7 @@ class SessionTest {
     }
 
     @Test
-    void Does_Not_Create_Session_When_Invalid(){
+    void does_not_create_if_invalid() {
 
         //Arrange
 
@@ -64,7 +64,7 @@ class SessionTest {
     }
 
     @Test
-    void Can_Update_Session_When_Valid(){
+    void can_update_if_valid() {
 
         //Arrange
 
@@ -97,7 +97,7 @@ class SessionTest {
     }
 
     @Test
-    void Does_Not_Update_When_Invalid(){
+    void does_not_update_if_invalid() {
 
         //Arrange
 
@@ -129,7 +129,7 @@ class SessionTest {
     }
 
     @Test
-    void Can_Add_Speaker() {
+    void can_add_speaker() {
 
         //ArrangeSession
 
@@ -152,6 +152,7 @@ class SessionTest {
         session.flatMap(sesh -> speaker.map(sesh::addSpeaker));
 
         //Assert
+
 
 
 
