@@ -7,8 +7,7 @@ import com.conferencescheduler.infrastructure.DescriptionBioConverter;
 import com.conferencescheduler.infrastructure.NameTitleConverter;
 import com.conferencescheduler.infrastructure.SessionLengthConverter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
@@ -17,6 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Session {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Getter
@@ -34,6 +34,7 @@ public class Session {
     @Convert(converter = SessionLengthConverter.class)
     private SessionLength session_length;
 
+    @Getter
     @ManyToMany
     @JoinTable(
             name = "session_speakers",
