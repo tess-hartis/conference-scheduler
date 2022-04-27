@@ -1,5 +1,6 @@
 package com.conferencescheduler.controllers;
 
+import an.awesome.pipelinr.Pipeline;
 import com.conferencescheduler.cqrs.speakers.*;
 import com.conferencescheduler.dtos.GetSpeakerDto;
 import lombok.AllArgsConstructor;
@@ -18,50 +19,44 @@ import static org.springframework.http.ResponseEntity.*;
 @RequestMapping("/api/v1/speakers")
 public class SpeakersController {
 
-   private final SpeakerWriteHandler speakerWriteHandler;
-   private final SpeakerReadHandler speakerReadHandler;
+   private final Pipeline pipeline;
 
     @GetMapping
-    public List<GetSpeakerDto> list() {
+    public List<GetSpeakerDto> list(GetSpeakersQuery query) {
 
-        var request = new GetSpeakersQuery();
-        var response = speakerReadHandler.handleGetAll(request);
-        return response.stream()
-                .map(GetSpeakerDto::fromSpeaker)
-                .collect(Collectors.toList());
+        var response = query.execute(pipeline);
+        return response.stream().map(GetSpeakerDto::fromSpeaker).collect(Collectors.toList());
     }
 
     @GetMapping
     @RequestMapping("{id}")
     public ResponseEntity<GetSpeakerDto> get(@PathVariable Long id){
 
-        var request = new GetSpeakerQuery(id);
-        var response = speakerReadHandler.handleGetOne(request);
+        var response = new GetSpeakerQuery(id).execute(pipeline);
         return response.fold(() -> notFound().build(), speaker -> ok(GetSpeakerDto.fromSpeaker(speaker)));
     }
 
     @PostMapping
-    public ResponseEntity create(@RequestBody PostSpeakerCommand request){
+    public ResponseEntity create(@RequestBody PostSpeakerCommand command){
 
-        var response = speakerWriteHandler.handlePost(request);
+        var response = command.execute(pipeline);
         return response.fold(e -> unprocessableEntity().body(e), speaker -> ok(GetSpeakerDto.fromSpeaker(speaker)));
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
     public ResponseEntity<HttpStatus> delete(@PathVariable Long id) {
 
-       var request = new DeleteSpeakerCommand(id);
-       var response = speakerWriteHandler.handleDelete(request);
+       var response = new DeleteSpeakerCommand(id).execute(pipeline);
        return Match(response).of(
                Case($(0), new ResponseEntity<>(HttpStatus.BAD_REQUEST)),
                Case($(1), new ResponseEntity<>(HttpStatus.NO_CONTENT)));
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.PUT)
-    public ResponseEntity update(@PathVariable Long id, @RequestBody PutSpeakerCommand request) {
+    public ResponseEntity update(@PathVariable Long id, @RequestBody PutSpeakerCommand command) {
 
-        request.id = id;
-        var response = speakerWriteHandler.handlePut(request);
+        command.setId(id);
+        var response = command.execute(pipeline);
         return response.fold(() -> notFound().build(),
                 speaker -> speaker.fold(errors -> unprocessableEntity().body(errors),
                         updated -> ok(GetSpeakerDto.fromSpeaker(updated))));

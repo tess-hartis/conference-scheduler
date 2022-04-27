@@ -1,9 +1,10 @@
 package com.conferencescheduler.cqrs.speakers;
 
+import an.awesome.pipelinr.Command;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public class DeleteSpeakerCommand {
+public class DeleteSpeakerCommand implements Command<Integer> {
 
-    public Long id;
+    Long id;
 }

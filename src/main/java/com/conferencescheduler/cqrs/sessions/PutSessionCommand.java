@@ -1,13 +1,22 @@
 package com.conferencescheduler.cqrs.sessions;
 
+import an.awesome.pipelinr.Command;
+import com.conferencescheduler.domain.Session;
+import io.vavr.control.Option;
+import io.vavr.control.Validation;
 import lombok.AllArgsConstructor;
 
+import java.util.List;
+
 @AllArgsConstructor
-public class PutSessionCommand {
+public class PutSessionCommand implements Command<Option<Validation<List<String>, Session>>> {
 
-    public Long id;
-    public String session_name;
-    public String session_description;
-    public Integer session_length;
+    Long id;
+    String session_name;
+    String session_description;
+    Integer session_length;
 
+    public void setId(Long newId){
+        this.id = newId;
+    }
 }

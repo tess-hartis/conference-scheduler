@@ -1,5 +1,6 @@
 package com.conferencescheduler.cqrs.services;
 
+import an.awesome.pipelinr.Command;
 import com.conferencescheduler.domain.Session;
 import com.conferencescheduler.repositories.SessionRepository;
 import com.conferencescheduler.repositories.SpeakerRepository;
@@ -11,36 +12,21 @@ import javax.transaction.Transactional;
 
 @Component
 @AllArgsConstructor
-public class SpeakerSessionHandler {
+public class SpeakerSessionHandler implements Command.Handler<PostSessionSpeakerCmd, Option<Session>> {
 
     private final SessionRepository sessionRepository;
     private final SpeakerRepository speakerRepository;
 
+    @Override
     @Transactional
-    public Option<Session> addSessionSpeaker(Long sessionId, Long speakerId){
-        var speaker = speakerRepository.findByIdOption(speakerId);
-        var session = sessionRepository.findByIdOption(sessionId);
+    public Option<Session> handle(PostSessionSpeakerCmd command) {
+
+        var speaker = speakerRepository.findByIdOption(command.speakerId);
+        var session = sessionRepository.findByIdOption(command.sessionId);
 
         return speaker.flatMap(speak -> session.map(sesh -> {
             sesh.addSpeaker(speak);
             return sessionRepository.save(sesh);
         }));
-
-//        return speaker.flatMap(s -> session.map(s::addSession)
-//                .map(x -> speakerRepository.saveAndFlush(s)));
-
-//        return speaker.flatMap(speak -> session.map(sesh -> {
-//            speak.addSession(sesh);
-//            return speakerRepository.saveAndFlush(speak);
-//        }));
-
-
-//        if (!result.isEmpty())
-//            result.map(x -> speakerRepository.saveAndFlush(speaker.get()));
-
-//        return result;
-
-
-//      var result = speaker.map(s -> session.map(x -> s.addSession(x)));
     }
 }

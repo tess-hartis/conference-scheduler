@@ -1,17 +1,18 @@
 package com.conferencescheduler.controllers;
 
-import com.conferencescheduler.cqrs.services.SpeakerSessionHandler;
+import an.awesome.pipelinr.Pipeline;
+import com.conferencescheduler.cqrs.services.PostSessionSpeakerCmd;
 import com.conferencescheduler.cqrs.sessions.*;
 import com.conferencescheduler.dtos.GetSessionDto;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.stream.Collectors;
+
 import static io.vavr.API.*;
-import static io.vavr.Patterns.$None;
-import static io.vavr.Patterns.$Some;
 import static org.springframework.http.ResponseEntity.*;
 
 @RestController
@@ -19,53 +20,44 @@ import static org.springframework.http.ResponseEntity.*;
 @RequestMapping("/api/v1/sessions")
 public class SessionsController {
 
-    private final SessionWriteHandler sessionWriteHandler;
-    private final SessionReadHandler sessionReadHandler;
-    private final SpeakerSessionHandler speakerSessionHandler;
+    private final Pipeline pipeline;
 
     @GetMapping
-    public List<GetSessionDto> list() {
+    public List<GetSessionDto> list(GetSessionsQuery query) {
 
-        var request = new GetSessionsQuery();
-        var response = sessionReadHandler.handleGetAll(request);
-        return response.stream()
-                .map(GetSessionDto::fromSession)
-                .collect(Collectors.toList());
+        var response = query.execute(pipeline);
+        return response.stream().map(GetSessionDto::fromSession).collect(Collectors.toList());
     }
 
     @GetMapping
     @RequestMapping("{id}")
     public ResponseEntity get(@PathVariable Long id) {
 
-        var request = new GetSessionQuery(id);
-        var response = sessionReadHandler.handleGetOne(request);
-        return Match(response).of(
-                Case($Some($()), x -> new ResponseEntity<>(GetSessionDto.fromSession(x), HttpStatus.OK)),
-                Case($None(), () -> new ResponseEntity<>(HttpStatus.NOT_FOUND)));
+        var response = new GetSessionQuery(id).execute(pipeline);
+        return response.fold(() -> notFound().build(), session -> ok(GetSessionDto.fromSession(session)));
     }
 
     @PostMapping
-    public ResponseEntity create(@RequestBody PostSessionCommand request) {
+    public ResponseEntity create(@RequestBody PostSessionCommand command) {
 
-        var response = sessionWriteHandler.handlePost(request);
+        var response = command.execute(pipeline);
         return response.fold(e -> unprocessableEntity().body(e), s -> ok(GetSessionDto.fromSession(s)));
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
     public ResponseEntity<HttpStatus> delete(@PathVariable Long id) {
 
-        var request = new DeleteSessionCommand(id);
-        var response = sessionWriteHandler.handleDelete(request);
+        var response = new DeleteSessionCommand(id).execute(pipeline);
         return Match(response).of(
                 Case($(0), new ResponseEntity<>(HttpStatus.NOT_FOUND)),
                 Case($(1), new ResponseEntity<>(HttpStatus.NO_CONTENT)));
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.PUT)
-    public ResponseEntity update(@PathVariable Long id, @RequestBody PutSessionCommand request) {
+    public ResponseEntity update(@PathVariable Long id, @RequestBody PutSessionCommand command) {
 
-        request.id = id;
-        var response = sessionWriteHandler.handlePut(request);
+        command.setId(id);
+        var response = command.execute(pipeline);
         return response.fold(() -> notFound().build(),
                 session -> session.fold(errors -> unprocessableEntity().body(errors),
                         updated -> ok(GetSessionDto.fromSession(updated))));
@@ -75,7 +67,7 @@ public class SessionsController {
     @RequestMapping("{sessionId}/speaker/{speakerId}")
     public ResponseEntity addSpeaker(@PathVariable Long sessionId, @PathVariable Long speakerId){
 
-        var response = speakerSessionHandler.addSessionSpeaker(sessionId, speakerId);
+        var response = new PostSessionSpeakerCmd(sessionId, speakerId).execute(pipeline);
         return response.fold(() -> badRequest().build(), session -> ok("Successfully added"));
     }
 

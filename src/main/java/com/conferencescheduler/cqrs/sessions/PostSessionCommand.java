@@ -1,11 +1,16 @@
 package com.conferencescheduler.cqrs.sessions;
 
+import an.awesome.pipelinr.Command;
+import com.conferencescheduler.domain.Session;
+import io.vavr.control.Validation;
 import lombok.AllArgsConstructor;
 
-@AllArgsConstructor
-public class PostSessionCommand {
+import java.util.List;
 
-    public String session_name;
-    public String session_description;
-    public Integer session_length;
+@AllArgsConstructor
+public class PostSessionCommand implements Command<Validation<List<String>, Session>> {
+
+    String session_name;
+    String session_description;
+    Integer session_length;
 }

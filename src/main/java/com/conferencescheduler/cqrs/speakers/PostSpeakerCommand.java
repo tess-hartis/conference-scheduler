@@ -1,13 +1,18 @@
 package com.conferencescheduler.cqrs.speakers;
 
+import an.awesome.pipelinr.Command;
+import com.conferencescheduler.domain.Speaker;
+import io.vavr.control.Validation;
 import lombok.AllArgsConstructor;
 
-@AllArgsConstructor
-public class PostSpeakerCommand {
+import java.util.List;
 
-    public String first_name;
-    public String last_name;
-    public String title;
-    public String company;
-    public String speaker_bio;
+@AllArgsConstructor
+public class PostSpeakerCommand implements Command<Validation<List<String>, Speaker>> {
+
+    String first_name;
+    String last_name;
+    String title;
+    String company;
+    String speaker_bio;
 }
