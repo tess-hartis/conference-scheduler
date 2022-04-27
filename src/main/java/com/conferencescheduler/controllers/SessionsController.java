@@ -26,7 +26,7 @@ public class SessionsController {
     public List<GetSessionDto> list(GetSessionsQuery query) {
 
         var response = query.execute(pipeline);
-        return response.stream().map(GetSessionDto::fromSession).collect(Collectors.toList());
+        return response.stream().map(GetSessionDto::fromDomain).collect(Collectors.toList());
     }
 
     @GetMapping
@@ -34,14 +34,14 @@ public class SessionsController {
     public ResponseEntity get(@PathVariable Long id) {
 
         var response = new GetSessionQuery(id).execute(pipeline);
-        return response.fold(() -> notFound().build(), session -> ok(GetSessionDto.fromSession(session)));
+        return response.fold(() -> notFound().build(), session -> ok(GetSessionDto.fromDomain(session)));
     }
 
     @PostMapping
     public ResponseEntity create(@RequestBody PostSessionCommand command) {
 
         var response = command.execute(pipeline);
-        return response.fold(e -> unprocessableEntity().body(e), s -> ok(GetSessionDto.fromSession(s)));
+        return response.fold(e -> unprocessableEntity().body(e), s -> ok(GetSessionDto.fromDomain(s)));
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
@@ -60,7 +60,7 @@ public class SessionsController {
         var response = command.execute(pipeline);
         return response.fold(() -> notFound().build(),
                 session -> session.fold(errors -> unprocessableEntity().body(errors),
-                        updated -> ok(GetSessionDto.fromSession(updated))));
+                        updated -> ok(GetSessionDto.fromDomain(updated))));
     }
 
     @PostMapping

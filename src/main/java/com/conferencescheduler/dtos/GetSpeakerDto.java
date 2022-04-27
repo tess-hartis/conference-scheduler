@@ -1,7 +1,11 @@
 package com.conferencescheduler.dtos;
 
 import com.conferencescheduler.domain.Speaker;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
+@Data
+@AllArgsConstructor
 public class GetSpeakerDto {
 
     private Long speaker_id;
@@ -13,62 +17,13 @@ public class GetSpeakerDto {
 
     public static GetSpeakerDto fromSpeaker(Speaker speaker) {
 
-        var dto = new GetSpeakerDto();
-        dto.speaker_id = speaker.getSpeaker_id();
-        dto.first_name = speaker.getFirst_name().value;
-        dto.last_name = speaker.getLast_name().value;
-        dto.title = speaker.getTitle().value;
-        dto.company = speaker.getCompany().value;
-        dto.speaker_bio = speaker.getSpeaker_bio().value;
-
-        return dto;
-    }
-
-    public Long getSpeaker_id() {
-        return speaker_id;
-    }
-
-    public void setSpeaker_id(Long speaker_id) {
-        this.speaker_id = speaker_id;
-    }
-
-    public String getFirst_name() {
-        return first_name;
-    }
-
-    public void setFirst_name(String first_name) {
-        this.first_name = first_name;
-    }
-
-    public String getLast_name() {
-        return last_name;
-    }
-
-    public void setLast_name(String last_name) {
-        this.last_name = last_name;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getCompany() {
-        return company;
-    }
-
-    public void setCompany(String company) {
-        this.company = company;
-    }
-
-    public String getSpeaker_bio() {
-        return speaker_bio;
-    }
-
-    public void setSpeaker_bio(String speaker_bio) {
-        this.speaker_bio = speaker_bio;
+        return new GetSpeakerDto(
+                speaker.getSpeaker_id(),
+                speaker.getFirst_name().value,
+                speaker.getLast_name().value,
+                speaker.getTitle().value,
+                speaker.getCompany().value,
+                speaker.getSpeaker_bio().value
+        );
     }
 }

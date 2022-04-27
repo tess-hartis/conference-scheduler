@@ -1,5 +1,8 @@
 package com.conferencescheduler.dtos;
 
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
 public class PostSpeakerDto {
 
     public String first_name;

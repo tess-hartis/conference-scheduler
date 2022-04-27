@@ -17,21 +17,16 @@ import java.util.List;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Session {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Getter
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY) @Getter
     private Long session_id;
 
-    @Getter
-    @Convert(converter = NameTitleConverter.class)
+    @Getter @Convert(converter = NameTitleConverter.class)
     private NameTitle session_name;
 
-    @Getter
-    @Convert(converter = DescriptionBioConverter.class)
+    @Getter @Convert(converter = DescriptionBioConverter.class)
     private DescriptionBio session_description;
 
-    @Getter
-    @Convert(converter = SessionLengthConverter.class)
+    @Getter @Convert(converter = SessionLengthConverter.class)
     private SessionLength session_length;
 
     @Getter

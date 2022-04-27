@@ -1,16 +1,13 @@
 package com.conferencescheduler.domain.valueobjects;
 
 import io.vavr.control.Validation;
+import lombok.NonNull;
+import lombok.Value;
 
-import java.util.Objects;
-
+@Value
 public class DescriptionBio {
 
-    public String value;
-
-    private DescriptionBio(String value){
-        this.value = Objects.requireNonNullElse(value, "");
-    }
+    @NonNull String value;
 
     public static Validation<String, DescriptionBio> validate(String descriptionBio) {
         if (descriptionBio.length() > 2000)
@@ -20,5 +17,9 @@ public class DescriptionBio {
             return Validation.invalid("Description is too short");
 
         else return Validation.valid(new DescriptionBio(descriptionBio));
+    }
+
+    public static DescriptionBio unsafe(String value){
+        return new DescriptionBio(value);
     }
 }

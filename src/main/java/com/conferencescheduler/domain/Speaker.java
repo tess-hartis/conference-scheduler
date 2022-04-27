@@ -16,33 +16,26 @@ import java.util.List;
 @NoArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Speaker {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Getter
+
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY) @Getter
     private Long speaker_id;
 
-    @Getter
-    @Convert(converter = NameTitleConverter.class)
+    @Getter @Convert(converter = NameTitleConverter.class)
     private NameTitle first_name;
 
-    @Getter
-    @Convert(converter = NameTitleConverter.class)
+    @Getter @Convert(converter = NameTitleConverter.class)
     private NameTitle last_name;
 
-    @Getter
-    @Convert(converter = NameTitleConverter.class)
+    @Getter @Convert(converter = NameTitleConverter.class)
     private NameTitle title;
 
-    @Getter
-    @Convert(converter = NameTitleConverter.class)
+    @Getter @Convert(converter = NameTitleConverter.class)
     private NameTitle company;
 
-    @Getter
-    @Convert(converter = DescriptionBioConverter.class)
+    @Getter @Convert(converter = DescriptionBioConverter.class)
     private DescriptionBio speaker_bio;
 
-    @Lob
-    @Type(type="org.hibernate.type.BinaryType")
+    @Lob @Type(type="org.hibernate.type.BinaryType")
     private byte[] speaker_photo;
 
     @ManyToMany(mappedBy = "speakers")

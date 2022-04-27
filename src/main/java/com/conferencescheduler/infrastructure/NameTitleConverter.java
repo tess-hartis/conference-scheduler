@@ -13,7 +13,7 @@ public class NameTitleConverter implements AttributeConverter<NameTitle, String>
         if (nameTitle == null) {
             return null;
         }
-        return nameTitle.value;
+        return nameTitle.getValue();
     }
 
     @Override
@@ -22,6 +22,6 @@ public class NameTitleConverter implements AttributeConverter<NameTitle, String>
             return null;
         }
 
-        return NameTitle.validate(dbNameTitle).get();
+        return NameTitle.unsafe(dbNameTitle);
     }
 }

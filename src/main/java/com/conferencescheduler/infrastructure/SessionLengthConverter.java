@@ -12,7 +12,7 @@ public class SessionLengthConverter implements AttributeConverter<SessionLength,
         if (sessionLength == null) {
             return null;
         }
-        return sessionLength.value;
+        return sessionLength.getValue();
     }
 
     @Override
@@ -21,6 +21,6 @@ public class SessionLengthConverter implements AttributeConverter<SessionLength,
             return null;
         }
 
-        return SessionLength.validate(dbSessionLength).get();
+        return SessionLength.unsafe(dbSessionLength);
     }
 }

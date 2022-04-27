@@ -12,7 +12,7 @@ public class DescriptionBioConverter implements AttributeConverter<DescriptionBi
         if (sessionDescription == null) {
             return null;
         }
-        return sessionDescription.value;
+        return sessionDescription.getValue();
     }
 
     @Override
@@ -20,6 +20,6 @@ public class DescriptionBioConverter implements AttributeConverter<DescriptionBi
         if (dbSessionDescription == null || dbSessionDescription.isEmpty()) {
             return null;
         }
-        return DescriptionBio.validate(dbSessionDescription).get();
+        return DescriptionBio.unsafe(dbSessionDescription);
     }
 }
