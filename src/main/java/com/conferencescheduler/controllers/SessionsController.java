@@ -42,10 +42,6 @@ public class SessionsController {
         return Match(response).of(
                 Case($Some($()), x -> new ResponseEntity<>(GetSessionDto.fromSession(x), HttpStatus.OK)),
                 Case($None(), () -> new ResponseEntity<>(HttpStatus.NOT_FOUND)));
-
-//        return response.fold(notFound(), x -> new ResponseEntity<>(GetSessionDto.fromSession(x), HttpStatus.OK));
-//        return response.map(x -> ok(GetSessionDto.fromSession(x))).orElse(notFound()));
-
     }
 
     @PostMapping
@@ -70,19 +66,17 @@ public class SessionsController {
 
         request.id = id;
         var response = sessionWriteHandler.handlePut(request);
-        return Match(response).of(
-                Case($Some($()), x ->
-                        x.fold(e -> unprocessableEntity().body(e), s -> ok(GetSessionDto.fromSession(s)))),
-                Case($None(), () -> new ResponseEntity<>(HttpStatus.NOT_FOUND)));
+        return response.fold(() -> notFound().build(),
+                session -> session.fold(errors -> unprocessableEntity().body(errors),
+                        updated -> ok(GetSessionDto.fromSession(updated))));
     }
 
     @PostMapping
     @RequestMapping("{sessionId}/speaker/{speakerId}")
     public ResponseEntity addSpeaker(@PathVariable Long sessionId, @PathVariable Long speakerId){
+
         var response = speakerSessionHandler.addSessionSpeaker(sessionId, speakerId);
-        return Match(response).of(
-                Case($Some($()), x -> ok("Successfully added")),
-                Case($None(), () -> new ResponseEntity<>(HttpStatus.BAD_REQUEST)));
+        return response.fold(() -> badRequest().build(), session -> ok("Successfully added"));
     }
 
 }

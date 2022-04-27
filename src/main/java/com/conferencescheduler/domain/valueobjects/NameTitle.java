@@ -4,6 +4,7 @@ import io.vavr.control.Validation;
 
 public class NameTitle {
 
+    //make private and add getter
     public String value;
 
     private NameTitle(String value){

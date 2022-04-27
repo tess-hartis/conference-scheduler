@@ -11,10 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static io.vavr.API.*;
-import static io.vavr.Patterns.$None;
-import static io.vavr.Patterns.$Some;
-import static org.springframework.http.ResponseEntity.ok;
-import static org.springframework.http.ResponseEntity.unprocessableEntity;
+import static org.springframework.http.ResponseEntity.*;
 
 @RestController
 @AllArgsConstructor
@@ -40,16 +37,14 @@ public class SpeakersController {
 
         var request = new GetSpeakerQuery(id);
         var response = speakerReadHandler.handleGetOne(request);
-        return Match(response).of(
-                Case($Some($()), x -> new ResponseEntity<>(GetSpeakerDto.fromSpeaker(x), HttpStatus.OK)),
-                Case($None(), () -> new ResponseEntity<>(HttpStatus.NOT_FOUND)));
+        return response.fold(() -> notFound().build(), speaker -> ok(GetSpeakerDto.fromSpeaker(speaker)));
     }
 
     @PostMapping
     public ResponseEntity create(@RequestBody PostSpeakerCommand request){
 
         var response = speakerWriteHandler.handlePost(request);
-        return response.fold(e -> unprocessableEntity().body(e), s -> ok(GetSpeakerDto.fromSpeaker(s)));
+        return response.fold(e -> unprocessableEntity().body(e), speaker -> ok(GetSpeakerDto.fromSpeaker(speaker)));
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
@@ -67,9 +62,8 @@ public class SpeakersController {
 
         request.id = id;
         var response = speakerWriteHandler.handlePut(request);
-        return Match(response).of(
-                Case($Some($()), x ->
-                        x.fold(e -> unprocessableEntity().body(e), s -> ok(GetSpeakerDto.fromSpeaker(s)))),
-                Case($None(), () -> new ResponseEntity<>(HttpStatus.NOT_FOUND)));
+        return response.fold(() -> notFound().build(),
+                speaker -> speaker.fold(errors -> unprocessableEntity().body(errors),
+                        updated -> ok(GetSpeakerDto.fromSpeaker(updated))));
     }
 }
